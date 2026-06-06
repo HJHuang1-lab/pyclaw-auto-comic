@@ -17,10 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           cache: 'pip'
 
       - name: Install dependencies
@@ -32,7 +32,10 @@ jobs:
         env:
           # API 金鑰與敏感憑證
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-1.5-flash
+          # 使用目前有效的 Gemini 模型（gemini-2.0-flash 速度快且免費額度高）
+          GEMINI_MODEL: gemini-2.0-flash
+          # Imagen 圖片生成模型
+          IMAGEN_MODEL: imagen-3.0-generate-002
           HOST: 127.0.0.1
           PORT: 8000
           
@@ -54,6 +57,7 @@ jobs:
           # 系統環境設定
           AGENT_WORKSPACE: ./agent_workspace
           DATABASE_PATH: pyclaw.db
+          CRON_SECRET_KEY: ${{ secrets.CRON_SECRET_KEY }}
         run: python run_cron.py
 
       - name: Commit and Push generated comic files
