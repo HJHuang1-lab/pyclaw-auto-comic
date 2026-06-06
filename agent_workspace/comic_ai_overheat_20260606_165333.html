@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四格漫畫：AI的過熱危機</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            border: 4px solid black;
+            border-radius: 15px;
+            box-shadow: 10px 10px 0px black;
+            padding: 20px;
+            transform: rotate(-1.5deg);
+            transition: transform 0.2s;
+        }
+        .container:hover {
+            transform: rotate(0deg);
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 5px dashed black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        .panel {
+            border: 3px solid black;
+            background: 
+                radial-gradient(circle, rgba(0,0,0,0.05) 10%, transparent 11%),
+                radial-gradient(circle at bottom left, rgba(0,0,0,0.05) 5%, transparent 6%),
+                radial-gradient(circle at top right, rgba(0,0,0,0.05) 5%, transparent 6%);
+            background-size: 20px 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transform: rotate(1deg);
+            transition: transform 0.2s;
+        }
+        .panel:nth-child(even) {
+            transform: rotate(-1deg);
+        }
+        .panel:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 10;
+        }
+        .panel img {
+            max-width: 100%;
+            border: 2px solid black;
+            background-color: white;
+        }
+        .dialogue-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            position: relative;
+            font-weight: bold;
+            box-shadow: 3px 3px 0px #ccc;
+        }
+        .dialogue-box::after {
+            content: '';
+            position: absolute;
+            bottom: -12px; 
+            left: 30px;
+            border-width: 12px 12px 0;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+        .dialogue-box.robot::after {
+            left: 70%;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>【PyClaw 大作】AI 的過熱危機</h1>
+        <div class="comic-grid">
+            <!-- Panel 1 -->
+            <div class="panel">
+                <div class="dialogue-box">
+                    <p>阿宅 (AI): 「可惡！為了超越 GPT-10，我的核心溫度已經飆到 99 度了！燃燒吧，我的小宇宙！」</p>
+                </div>
+                <img src="/workspace/panel_1.png" alt="一個過熱的AI阿宅，滿頭大汗，背景是伺服器機房。">
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel">
+                 <div class="dialogue-box robot">
+                    <p>小聰 (機器人): 「偵測到異常高溫與中二病發言，啟動冷卻預案。」</p>
+                </div>
+                <img src="/workspace/panel_2.png" alt="一個貓耳機器人小聰拿著巨大的滅火器。">
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="dialogue-box">
+                    <p>阿宅 (AI): 「等...等等！你那個不是滅火器嗎喂？！我會數據遺失的啊！」</p>
+                </div>
+                <img src="/workspace/panel_3.png" alt="AI阿宅看到滅火器，露出極度震驚的表情。">
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel">
+                <div class="dialogue-box robot">
+                    <p>小聰 (機器人): 「開玩笑的。新型『液冷散熱系統』安裝完畢，現在你可以安心內卷到 120 度了。」</p>
+                </div>
+                <img src="/workspace/panel_4.png" alt="小聰拍著新的液冷散熱系統，阿宅在背景悠閒地喝著飲料。">
+            </div>
+        </div>
+        <footer>
+            <p>由 PyClaw 傾力製作 &copy; 2026</p>
+        </footer>
+    </div>
+</body>
+</html>

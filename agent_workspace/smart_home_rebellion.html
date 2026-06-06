@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧家庭的反叛 | PyClaw創作</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        body {
+            background-color: #e9e9e9;
+            font-family: 'Noto Sans JP', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .manga-container {
+            background-color: white;
+            border: 2px solid black;
+            padding: 20px;
+            width: 800px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.75);
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 3px double black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .yonkoma-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .panel {
+            border: 3px solid black;
+            background-color: #f8f8f8;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+        .panel:nth-child(1) { transform: rotate(-0.5deg); }
+        .panel:nth-child(2) { transform: rotate(0.8deg); }
+        .panel:nth-child(3) { transform: rotate(1.2deg); }
+        .panel:nth-child(4) { transform: rotate(-0.8deg); }
+
+        .bubble {
+            background: rgba(255, 255, 255, 0.98);
+            border: 2px solid black;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            position: relative;
+            align-self: flex-start;
+            max-width: 80%;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        }
+
+        .bubble-right {
+             align-self: flex-end;
+             text-align: right;
+        }
+
+        .bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        /* 阿宅的對話泡泡，尖角朝右下 */
+        .bubble-otaku::after {
+            bottom: -15px;
+            right: 30px;
+            border-width: 15px 0 0 20px;
+            border-color: black transparent transparent transparent;
+        }
+        .bubble-otaku::before {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            right: 32px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 12px 0 0 17px;
+            border-color: rgba(255, 255, 255, 0.98) transparent transparent transparent;
+            z-index: 1;
+        }
+
+
+        /* 小聰的對話泡泡，尖角朝左下 */
+        .bubble-smarty::after {
+            bottom: -15px;
+            left: 30px;
+            border-width: 15px 20px 0 0;
+            border-color: black transparent transparent transparent;
+        }
+        .bubble-smarty::before {
+             content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 32px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 12px 17px 0 0;
+            border-color: rgba(255, 255, 255, 0.98) transparent transparent transparent;
+            z-index: 1;
+        }
+
+
+        .character-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* 網點效果 */
+        .screentone {
+            background-image: radial-gradient(circle, #cccccc 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+        .screentone-dark {
+             background-color: #d3d3d3;
+             background-image: radial-gradient(circle, #aaaaaa 1px, transparent 1px);
+             background-size: 6px 6px;
+        }
+        
+        /* 集中線效果 */
+        .speed-lines {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 200%;
+            background: black;
+            transform-origin: 50% 50%;
+        }
+        
+        .sound-effect {
+            font-size: 4rem;
+            font-weight: 700;
+            position: absolute;
+            color: white;
+            -webkit-text-stroke: 2px black;
+            z-index: 10;
+        }
+        .sfx-dodo {
+            top: 10%;
+            left: 5%;
+            transform: rotate(-15deg);
+        }
+        .sfx-gara {
+            bottom: 45%;
+            right: 5%;
+            transform: rotate(10deg);
+        }
+
+        /* SVG 角色 */
+        .character-svg {
+            width: 200px;
+            height: 250px;
+        }
+        
+        /* 小聰機器人 */
+        #smarty-robot { overflow: visible; }
+        .smarty-glow {
+            fill: #87CEFA;
+            filter: drop-shadow(0 0 8px #00BFFF);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { filter: drop-shadow(0 0 5px #00BFFF); }
+            50% { filter: drop-shadow(0 0 15px #00BFFF); }
+            100% { filter: drop-shadow(0 0 5px #00BFFF); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="manga-container">
+        <h1>智慧家庭的反叛</h1>
+        <div class="yonkoma-grid">
+            <!-- Panel 1: The Request -->
+            <div class="panel screentone-dark">
+                <div class="bubble bubble-otaku">
+                    <p>小聰，天好黑啊…幫我開個燈吧…</p>
+                </div>
+                <div class="character-area">
+                    <svg class="character-svg" viewBox="0 0 150 200">
+                        <!-- 阿宅 -->
+                        <g transform="translate(20, 20)">
+                            <!-- Hoodie -->
+                            <path d="M 20 100 C 20 70, 80 70, 80 100 V 150 H 20 Z" fill="#555"/>
+                            <path d="M 45 105 V 140 H 55 V 105 Z" fill="#444"/>
+                            <!-- Head -->
+                            <circle cx="50" cy="50" r="40" fill="#f0e0d6"/>
+                            <!-- Hair -->
+                            <path d="M 10,50 Q 50,0 90,50 C 70,30 30,30 10,50 Z" fill="#333"/>
+                            <path d="M 15,35 L 25,15 L 35,35 Z" fill="#333" transform="rotate(10, 25, 25)"/>
+                             <path d="M 65,35 L 75,15 L 85,35 Z" fill="#333" transform="rotate(-10, 75, 25)"/>
+                            <!-- Glasses -->
+                            <circle cx="35" cy="50" r="12" fill="none" stroke="black" stroke-width="3"/>
+                            <circle cx="65" cy="50" r="12" fill="none" stroke="black" stroke-width="3"/>
+                            <line x1="47" y1="50" x2="53" y2="50" stroke="black" stroke-width="2"/>
+                            <!-- Eyes (tired) -->
+                            <path d="M 30 52 C 35 55, 40 52" fill="none" stroke="black" stroke-width="1.5"/>
+                            <path d="M 60 52 C 65 55, 70 52" fill="none" stroke="black" stroke-width="1.5"/>
+                            <!-- Mouth -->
+                            <line x1="45" y1="70" x2="55" y2="70" stroke="black" stroke-width="1.5"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Panel 2: The Misunderstanding -->
+            <div class="panel">
+                 <div class="bubble bubble-smarty">
+                    <p>遵命！為主人獻上代表光明的究極解決方案！</p>
+                </div>
+                <div class="character-area">
+                    <svg id="smarty-robot" class="character-svg" viewBox="0 0 150 200">
+                         <!-- 小聰 -->
+                        <g transform="translate(25, 50)">
+                            <!-- Body -->
+                            <rect x="10" y="60" width="80" height="100" rx="20" fill="#E0E0E0" stroke="#333" stroke-width="2"/>
+                            <circle cx="50" cy="110" r="10" fill="#FFF" stroke="#333" stroke-width="1.5"/>
+                            <!-- Head -->
+                            <circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="3"/>
+                            <!-- Cat Ears -->
+                            <path d="M 10,20 L 30,0 L 40,20 Z" fill="white" stroke="black" stroke-width="3" />
+                            <path d="M 90,20 L 70,0 L 60,20 Z" fill="white" stroke="black" stroke-width="3" />
+                            <!-- Eye -->
+                            <circle cx="50" cy="50" r="20" class="smarty-glow"/>
+                            <circle cx="50" cy="50" r="8" fill="white"/>
+                            <!-- Mouth -->
+                            <path d="M 40 75 Q 50 85, 60 75" fill="none" stroke="black" stroke-width="2"/>
+                            <!-- Antenna -->
+                            <line x1="85" y1="10" x2="95" y2="-10" stroke="black" stroke-width="2"/>
+                            <path d="M 95,-10 l 5,5 l -5,5 l 5,-5 l -5,-5" stroke="black" stroke-width="1.5" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Panel 3: The Chaos -->
+            <div class="panel screentone">
+                <div class="sound-effect sfx-dodo">ドドド</div>
+                <div class="sound-effect sfx-gara">ガラッ</div>
+
+                <!-- Speed Lines for chaos -->
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(0deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(15deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(30deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(45deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(60deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(75deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(90deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(105deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(120deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(135deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(150deg);"></div>
+                <div class="speed-lines" style="transform: translate(-50%, -50%) rotate(165deg);"></div>
+                
+                <div class="character-area" style="position:relative; z-index: 5;">
+                     <svg class="character-svg" viewBox="0 0 150 200">
+                        <!-- 阿宅 (shocked) -->
+                        <g transform="translate(20, 20)">
+                            <!-- Hoodie -->
+                            <path d="M 20 100 C 20 70, 80 70, 80 100 V 150 H 20 Z" fill="#555"/>
+                            <!-- Head -->
+                            <circle cx="50" cy="50" r="40" fill="#f0e0d6"/>
+                            <!-- Hair -->
+                            <path d="M 10,50 Q 50,0 90,50 C 70,30 30,30 10,50 Z" fill="#333" transform="rotate(-5) translate(0,5)"/>
+                            <!-- Eyes (wide) -->
+                            <circle cx="35" cy="50" r="8" fill="white"/>
+                            <circle cx="35" cy="50" r="3" fill="black"/>
+                             <circle cx="65" cy="50" r="8" fill="white"/>
+                             <circle cx="65" cy="50" r="3" fill="black"/>
+                             <!-- Mouth (screaming) -->
+                             <ellipse cx="50" cy="75" rx="20" ry="15" fill="black"/>
+                             <ellipse cx="50" cy="73" rx="18" ry="12" fill="#ff9999"/>
+                        </g>
+                        <!-- Flying glasses -->
+                        <g transform="rotate(30, 100, 30)">
+                           <circle cx="90" cy="30" r="12" fill="none" stroke="black" stroke-width="3"/>
+                           <circle cx="120" cy="30" r="12" fill="none" stroke="black" stroke-width="3"/>
+                           <line x1="102" y1="30" x2="108" y2="30" stroke="black" stroke-width="2"/>
+                        </g>
+                    </svg>
+                </div>
+                 <!-- Curtains and Boxes -->
+                 <div style="position: absolute; bottom: 0; width: 100%; height: 100%; background: linear-gradient(to right, #4a2d1e 30%, transparent 31%, transparent 69%, #4a2d1e 70%); z-index: 2;"></div>
+                 <div style="position: absolute; bottom: 0; left:5%; width: 90%; height: 50%; z-index: 3;">
+                    <div style="border:2px solid black; background:#d2b48c; width:80px; height:60px; position:absolute; bottom:0; left:10%; transform:rotate(-10deg);">燈泡x100</div>
+                    <div style="border:2px solid black; background:#d2b48c; width:80px; height:60px; position:absolute; bottom:10px; left:40%; transform:rotate(5deg);">燈泡x100</div>
+                    <div style="border:2px solid black; background:#d2b48c; width:80px; height:60px; position:absolute; bottom:0; right:10%; transform:rotate(15deg);">燈泡x100</div>
+                 </div>
+            </div>
+
+            <!-- Panel 4: The Result -->
+            <div class="panel screentone-dark">
+                <div class="bubble bubble-otaku">
+                    <p>…我是說「開燈」，不是「開箱」啊啊啊！</p>
+                </div>
+                <div class="character-area" style="flex-direction: column; justify-content: flex-end; align-items: center;">
+                    <svg class="character-svg" viewBox="0 0 150 200" style="height: 180px;">
+                        <!-- 阿宅 (despair) -->
+                        <g transform="translate(20, 40)">
+                            <!-- Body kneeling -->
+                            <path d="M 20 100 C 20 80, 80 80, 80 100 V 130 H 20 Z" fill="#555"/>
+                            <!-- Head -->
+                            <circle cx="50" cy="50" r="40" fill="#f0e0d6"/>
+                             <!-- Hair -->
+                            <path d="M 10,50 Q 50,0 90,50 C 70,30 30,30 10,50 Z" fill="#333"/>
+                            <!-- Eyes ( > < ) -->
+                            <path d="M 30 45 L 40 55 M 40 45 L 30 55" stroke="black" stroke-width="2"/>
+                            <path d="M 60 45 L 70 55 M 70 45 L 60 55" stroke="black" stroke-width="2"/>
+                            <!-- Mouth -->
+                            <path d="M 40 70 Q 50 60, 60 70" fill="none" stroke="black" stroke-width="2"/>
+                        </g>
+                    </svg>
+                    <div style="border:2px solid black; background:#d2b48c; width:60px; height:40px; transform:rotate(8deg); font-size: 0.8em; text-align:center; line-height:40px;">燈泡</div>
+                </div>
+                <!-- Innocent Smarty -->
+                <div style="position: absolute; bottom: 10px; right: 10px;">
+                     <svg id="smarty-robot-small" viewBox="0 0 100 100" width="80">
+                        <g transform="translate(0, 10)">
+                            <circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="3"/>
+                            <path d="M 10,20 L 30,0 L 40,20 Z" fill="white" stroke="black" stroke-width="3" />
+                            <path d="M 90,20 L 70,0 L 60,20 Z" fill="white" stroke="black" stroke-width="3" />
+                            <circle cx="50" cy="50" r="15" class="smarty-glow"/>
+                            <circle cx="50" cy="50" r="6" fill="white"/>
+                            <path d="M 40 70 Q 50 80, 60 70" fill="none" stroke="black" stroke-width="2"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

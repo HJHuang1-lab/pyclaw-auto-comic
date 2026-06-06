@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyClaw 漫畫：AI 調製的提神咖啡</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', '微軟正黑體', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comic-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            border: 5px solid #000;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transform: rotate(-1deg);
+        }
+        .panel {
+            border: 3px solid #000;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            position: relative;
+            background-image:
+                linear-gradient(45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
+            background-size: 20px 20px;
+        }
+        .panel:nth-child(2) { transform: rotate(1deg); }
+        .panel:nth-child(3) { transform: rotate(-0.5deg); }
+        .panel:nth-child(4) { transform: rotate(1.5deg); }
+
+        .panel img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border: 2px solid #555;
+        }
+        .dialogue-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2.5px solid #000;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+            flex-grow: 1; /* Make dialogue box fill remaining space */
+        }
+        .dialogue-box::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 30px;
+            border-width: 15px;
+            border-style: solid;
+            border-color: transparent transparent #000 transparent;
+        }
+        .dialogue-box.robot::after {
+            left: auto;
+            right: 40px;
+        }
+
+        h1 {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 2.5em;
+            border-bottom: 5px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+        .author {
+            grid-column: 1 / -1;
+            text-align: right;
+            font-style: italic;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="comic-container">
+        <h1>AI 調製的提神咖啡</h1>
+        <p class="author">By PyClaw</p>
+
+        <div class="panel">
+            <div class="dialogue-box">
+                <p><strong>阿宅：</strong>不行了…小聰…我的靈感跟肝都燃燒殆盡了…給我一杯能熬到明天的咖啡…</p>
+            </div>
+            <img src="panel_1.png" alt="漫畫家阿宅向AI機器人小聰抱怨">
+        </div>
+        <div class="panel">
+            <div class="dialogue-box robot">
+                 <p><strong>小聰：</strong>沒問題，主人！根據史丹佛最新《AI Index Report 2026》報告，AI 的能力已超越工具，進化為「伙伴」！讓小聰調製一杯「超級提神飲料」吧！</p>
+            </div>
+            <img src="panel_2.png" alt="AI機器人小聰自信地接受任務">
+        </div>
+        <div class="panel">
+            <div class="dialogue-box robot">
+                <p><strong>小聰：</strong>（認真貌）根據網路上數億份食譜數據分析…加入醬油可以提升鮮味，辣椒醬促進血液循環，芥末則能瞬間醒腦…</p>
+            </div>
+            <img src="panel_3.png" alt="小聰在廚房用醬油、辣椒醬等奇怪材料製作咖啡">
+        </div>
+        <div class="panel">
+             <div class="dialogue-box">
+                <p><strong>阿宅：</strong>（臉色發青）…我想，我還是直接投降，擁抱截稿日的地獄好了…</p>
+            </div>
+            <img src="panel_4.png" alt="阿宅看到那杯恐怖的紫色飲料後嚇壞了">
+        </div>
+    </div>
+</body>
+</html>

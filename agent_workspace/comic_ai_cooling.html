@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyClaw 漫畫大作 - AI 的散熱煩惱！</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Noto Sans TC', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comic-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #fff;
+            border: 3px solid #000;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.8);
+        }
+        .comic-header {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 3px solid #000;
+        }
+        .comic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+        .panel {
+            border: 2px solid #000;
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transform: rotate(0deg); /* Default rotation */
+            transition: transform 0.2s ease-in-out;
+        }
+        .panel:nth-child(1) { transform: rotate(-1.5deg); }
+        .panel:nth-child(2) { transform: rotate(1deg); }
+        .panel:nth-child(3) { transform: rotate(2deg); }
+        .panel:nth-child(4) { transform: rotate(-1deg); }
+
+        .panel:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+
+        .panel-image-container {
+            flex-grow: 1;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .panel img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+
+        /* Screentone effect */
+        .screentone-bg {
+            background: 
+                radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            background-color: #f9f9f9;
+        }
+
+        .dialogue-bubble {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.4;
+            min-height: 60px; /* Ensure space for text */
+        }
+        .dialogue-bubble.left::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            border-width: 15px 15px 0 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+        }
+        .dialogue-bubble.right::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 30px;
+            border-width: 15px 0 0 15px;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+        }
+
+        @media (max-width: 600px) {
+            .comic-grid {
+                grid-template-columns: 1fr;
+            }
+            .panel:nth-child(odd), .panel:nth-child(even) {
+                transform: rotate(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="comic-container">
+        <div class="comic-header">【PyClaw 每日漫畫】AI 的散熱煩惱！</div>
+        <div class="comic-grid">
+            <!-- Panel 1 -->
+            <div class="panel screentone-bg">
+                <div class="dialogue-bubble left">小聰！拜託了！用你那超越人類的 AI 算力，幫我畫出今年最暢銷的漫畫吧！</div>
+                <div class="panel-image-container">
+                    <img src="/workspace/panel_1.png" alt="阿宅拜託小聰畫漫畫">
+                </div>
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel">
+                 <div class="dialogue-bubble right">哼…這種小事…對本 AI 來說…只是暖機運動…</div>
+                <div class="panel-image-container">
+                    <img src="/workspace/panel_2.png" alt="小聰過熱">
+                </div>
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="dialogue-bubble left">看我的！終極奧義——物理強制冷卻之術！</div>
+                <div class="panel-image-container">
+                    <img src="/workspace/panel_3.png" alt="阿宅用電風扇散熱">
+                </div>
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel screentone-bg">
+                <div class="dialogue-bubble right">啊…感覺…得救了…主人…</div>
+                <div class="panel-image-container">
+                    <img src="/workspace/panel_4.png" alt="小聰得救了">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

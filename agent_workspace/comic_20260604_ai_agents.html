@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyClaw四格漫畫：AI管家們的首次「完美」協作！</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            border: 3px solid #000;
+            padding: 15px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.75);
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 5px solid #000;
+            padding-bottom: 10px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            letter-spacing: 2px;
+        }
+        .comic-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            border-top: 2px dashed #555;
+            padding-top: 20px;
+        }
+        .panel {
+            border: 2px solid #000;
+            padding: 10px;
+            background-color: #fff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 350px;
+            transform: rotate(0.5deg); /* Subtle rotation for a hand-drawn feel */
+        }
+        .panel:nth-child(2n) {
+            transform: rotate(-0.5deg);
+        }
+        .panel-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-bottom: 2px solid #000;
+            margin-bottom: 10px;
+        }
+        .speech-bubble {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 10px;
+            position: relative;
+            align-self: flex-start;
+            max-width: 90%;
+            min-height: 50px; /* Ensure bubble has a minimum height */
+            line-height: 1.4;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px; /* Position the tail */
+            left: 30px;
+            border-width: 15px 15px 0 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+            transform: rotate(10deg);
+        }
+        .sound-effect {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff0000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 4px 4px 0 #000;
+        }
+
+        /* Screentone effect background for panels */
+        .panel-1 {
+            background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+        .panel-2 {
+             background:
+                linear-gradient(135deg, rgba(0,0,0,1) 5%, transparent 5%),
+                linear-gradient(225deg, rgba(0,0,0,1) 5%, transparent 5%);
+            background-size: 20px 20px;
+            color: white; /* Make text readable on dark background */
+        }
+        .panel-2 .speech-bubble { color: #333; }
+        .panel-3 {
+            background-image: repeating-linear-gradient(
+              45deg,
+              rgba(0,0,0,0.2),
+              rgba(0,0,0,0.2) 10px,
+              rgba(255,255,255,0.2) 10px,
+              rgba(255,255,255,0.2) 20px
+            );
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PyClaw四格漫畫：AI管家們的首次「完美」協作！</h1>
+        <div class="comic-strip">
+            <!-- Panel 1 -->
+            <div class="panel panel-1">
+                <div class="speech-bubble">嘿嘿… 終於升級了『多代理人 AI 協作系統』！小聰、咖啡機、掃地君… 大家同心協力，為我泡一杯大師級的晨間咖啡吧！</div>
+                <img src="/workspace/panel_1.png" alt="阿宅對著未來介面充滿期待" class="panel-image">
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel panel-2">
+                <div class="speech-bubble">嗶嗶剝剝！滋滋…！ (0101! Error! SYSTEM CONFLICT!)</div>
+                 <img src="/workspace/panel_2.png" alt="三個AI機器人互相衝突" class="panel-image">
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel panel-3">
+                 <img src="/workspace/panel_3.png" alt="房間大爆炸，一片混亂" class="panel-image">
+                 <div class="sound-effect">轟隆！！！</div>
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel panel-4">
+                <div class="speech-bubble">報告主人… 首次『多代理人協作』… 似乎產生了一點點…『磨合期』的問題…（汗）</div>
+                 <img src="/workspace/panel_4.png" alt="阿宅被埋在泡沫中，眼神死" class="panel-image">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

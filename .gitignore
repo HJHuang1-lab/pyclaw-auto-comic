@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.venv
+.env
+
+# Database & Cache
+pyclaw.db
+db.sqlite3
+
+# Google API Credentials & Tokens
+google_drive_credentials.json
+google_drive_token.json
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Scratch directory
+scratch/
+

@@ -1,0 +1,73 @@
+name: Generate Daily Comic
+
+on:
+  schedule:
+    # 台灣時間每日早上 09:41 執行 (UTC 時間為 01:41)
+    - cron: '41 1 * * *'
+  workflow_dispatch: # 允許手動從 GitHub Actions 頁面點擊按鈕執行
+
+permissions:
+  contents: write # 賦予寫入權限，允許 Action 將生成的檔案 push 回 repository
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run automated comic generation
+        env:
+          # API 金鑰與敏感憑證
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-1.5-flash
+          HOST: 127.0.0.1
+          PORT: 8000
+          
+          # 將 BASE_URL 設為您的 GitHub Pages 網址
+          # GitHub Pages 的預設格式為 https://<owner>.github.io/<repo>
+          BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          
+          # SMTP 郵件通知設定
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 465
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          NOTIFICATION_RECEIVER: ${{ secrets.NOTIFICATION_RECEIVER }}
+          
+          # Google Drive OAuth 憑證 JSON 內容 (由 Secrets 還原成檔案)
+          GOOGLE_DRIVE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS_JSON }}
+          GOOGLE_DRIVE_TOKEN_JSON: ${{ secrets.GOOGLE_DRIVE_TOKEN_JSON }}
+          
+          # 系統環境設定
+          AGENT_WORKSPACE: ./agent_workspace
+          DATABASE_PATH: pyclaw.db
+        run: python run_cron.py
+
+      - name: Commit and Push generated comic files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 檢查是否有新生成的漫畫檔案
+          if [ -n "$(git status --porcelain agent_workspace)" ]; then
+            git add agent_workspace/
+            # 在 commit 訊息中加入 [skip ci] 可防止此 commit 重複觸發 Actions 執行
+            git commit -m "Auto-generated daily comic [skip ci]"
+            git push origin main
+            echo "Successfully committed and pushed new comic files back to GitHub."
+          else
+            echo "No changes in agent_workspace. Skipping commit."
+          fi

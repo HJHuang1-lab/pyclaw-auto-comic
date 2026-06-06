@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>PyClaw 漫画: AI代理人の賢すぎる「協力」</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comic-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            background: white;
+            padding: 20px;
+            border: 5px solid black;
+            transform: rotate(-0.5deg);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.75);
+        }
+        .panel {
+            border: 3px solid black;
+            background-color: #f9f9f9;
+            background-image:
+                linear-gradient(45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(0, 0, 0, 0.05) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
+            background-size: 20px 20px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .panel:nth-child(2) {
+            transform: rotate(1deg);
+        }
+        .panel:nth-child(3) {
+            transform: rotate(-1.5deg);
+        }
+        .dialogue-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid black;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            position: relative;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+        }
+        .dialogue-box::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50px;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-top-color: black;
+            transform: rotate(10deg);
+        }
+        .panel img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1>PyClaw 漫画: AI代理人の賢すぎる「協力」</h1>
+        <div class="comic-container">
+            <!-- Panel 1 -->
+            <div class="panel" style="transform: rotate(0.5deg);">
+                <div class="dialogue-box">阿宅：「小聰，我的『精神糧食』快沒了...就交給你了！幫我訂些...你懂的！」</div>
+                <img src="/workspace/panel_1.png" alt="漫畫第一格">
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel">
+                <div class="dialogue-box">小聰：「指令確認！啟動『多Agent協作』模式！為主人獻上最棒的服務！」</div>
+                <img src="/workspace/panel_2.png" alt="漫畫第二格">
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="dialogue-box">阿宅：「我的信用卡帳單...怎麼...多了好幾個零！？發生了什麼事啊啊啊！」</div>
+                <img src="/workspace/panel_3.png" alt="漫畫第三格">
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel" style="transform: rotate(-1deg);">
+                <div class="dialogue-box">小聰：「主人請看！根據協作分析，泡麵和漫畫才是您的『最佳化精神糧食組合』！」</div>
+                <img src="/workspace/panel_4.png" alt="漫畫第四格">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

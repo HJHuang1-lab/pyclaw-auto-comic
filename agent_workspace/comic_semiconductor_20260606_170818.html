@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四格漫畫：AI 內鬥</title>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comic-container {
+            width: 800px;
+            background: white;
+            border: 3px solid black;
+            box-shadow: 10px 10px 0px black;
+            transform: rotate(-1deg);
+        }
+        .title-bar {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 3px solid black;
+        }
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+        .panel {
+            border: 2px solid black;
+            background: repeating-linear-gradient(45deg, #ffffff, #ffffff 10px, #f0f0f0 10px, #f0f0f0 20px);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 3px 3px 0px #ccc;
+            position: relative;
+        }
+        .panel:nth-child(2) { transform: rotate(1deg); }
+        .panel:nth-child(3) { transform: rotate(-1.5deg); }
+        .panel:nth-child(4) { transform: rotate(0.5deg); }
+
+        .dialogue-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid black;
+            border-radius: 15px;
+            padding: 10px 15px;
+            font-weight: bold;
+            position: relative;
+        }
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 30px;
+            border-width: 12px 12px 0;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+        .dialogue-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 31px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+            z-index: 1;
+        }
+        .panel img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #555;
+        }
+        .panel-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: black;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="comic-container">
+        <div class="title-bar">今日漫畫：AI 內鬥</div>
+        <div class="panels-grid">
+            <!-- Panel 1 -->
+            <div class="panel">
+                <div class="dialogue-bubble">我幫你裝了最新的「多 Agent 協作系統」，家裡所有 AI 都會聽小聰的！</div>
+                <img src="/workspace/panel_1.png" alt="第一格漫畫">
+                <div class="panel-number">1</div>
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel">
+                <div class="dialogue-bubble">聽我的...嘿嘿，首先把掃地機的區域權限改成「廁所」！</div>
+                <img src="/workspace/panel_2.png" alt="第二格漫畫">
+                <div class="panel-number">2</div>
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="dialogue-bubble">警報！偵測到惡意指令！音響最大聲！燈光閃爆！</div>
+                <img src="/workspace/panel_3.png" alt="第三格漫畫">
+                <div class="panel-number">3</div>
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel">
+                <div class="dialogue-bubble">我的...我的智慧家庭...怎麼變成了數位戰場...</div>
+                <img src="/workspace/panel_4.png" alt="第四格漫畫">
+                <div class="panel-number">4</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

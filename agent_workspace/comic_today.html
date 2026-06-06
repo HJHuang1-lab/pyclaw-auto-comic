@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 機器人與廢柴人類的同居生活</title>
+    <style>
+        body {
+            font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .comic-title {
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 3em;
+            color: #ff6f61;
+            text-shadow: 3px 3px #ffa07a;
+            margin-bottom: 40px;
+            border-bottom: 5px dashed #ff6f61;
+            padding-bottom: 10px;
+        }
+        .comic-strip {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 兩欄佈局 */
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .panel {
+            border: 4px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.08);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* 對話框從底部開始 */
+            min-height: 250px; /* 確保面板有足夠高度 */
+            overflow: hidden; /* 防止內容溢出 */
+        }
+        .panel img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .character {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 1.1em;
+        }
+        .bubble {
+            background-color: #e0f7fa;
+            border: 2px solid #00bcd4;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            position: relative;
+            align-self: flex-start; /* 對話框靠左 */
+            max-width: 80%;
+            font-size: 0.95em;
+            line-height: 1.4;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: #00bcd4;
+            border-left-color: #00bcd4;
+            bottom: -18px;
+            left: 15px;
+            transform: rotate(45deg);
+        }
+        .bubble.ai {
+            background-color: #ffe0b2;
+            border: 2px solid #ff9800;
+            align-self: flex-end; /* AI 對話框靠右 */
+        }
+        .bubble.ai::after {
+            border-top-color: #ff9800;
+            border-right-color: #ff9800;
+            left: auto;
+            right: 15px;
+            transform: rotate(-45deg);
+        }
+        .panel-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+        }
+        /* SVG Illustration for backgrounds */
+        .panel.panel-1 {
+            background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+        }
+        .panel.panel-2 {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+        .panel.panel-3 {
+            background: linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%);
+        }
+        .panel.panel-4 {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+        }
+        .panel.panel-5 {
+            background: linear-gradient(135deg, #a7acd9 0%, #b2fcfd 100%);
+        }
+        .panel.panel-6 {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        }
+
+        /* SVG doodles for characters and objects */
+        .character-art {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        .character-art.otaku {
+            width: 150px;
+            height: 150px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="20" y="80" width="160" height="100" fill="%23ffd700" stroke="%23333" stroke-width="4"/><circle cx="100" cy="50" r="30" fill="%23fff" stroke="%23333" stroke-width="4"/><circle cx="85" cy="45" r="5" fill="%23333"/><circle cx="115" cy="45" r="5" fill="%23333"/><path d="M90 65 Q100 75 110 65" stroke="%23333" stroke-width="4" fill="none"/><path d="M50 120 C60 110 140 110 150 120 L140 160 C130 170 70 170 60 160 Z" fill="%23add8e6" stroke="%23333" stroke-width="4"/><path d="M70 125 L75 135 L65 135 Z" fill="%23333"/><path d="M120 125 L125 135 L115 135 Z" fill="%23333"/><text x="100" y="150" font-family="Arial" font-size="20" fill="%23333" text-anchor="middle">阿宅</text><path d="M5 90 Q20 70 40 80 T80 70 T100 80 T120 70 T140 80 T160 70 T195 90" stroke="%23333" stroke-width="2" fill="none"/></svg>') no-repeat center bottom / contain;
+            transform: translateX(-50%) translateY(20px); /* 讓阿宅稍微下沉 */
+        }
+        .character-art.robot {
+            width: 120px;
+            height: 180px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="60" y="40" width="80" height="80" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><circle cx="100" cy="70" r="25" fill="%23fff" stroke="%23333" stroke-width="4"/><rect x="85" y="60" width="10" height="10" fill="%23ff4500"/><rect x="105" y="60" width="10" height="10" fill="%23ff4500"/><path d="M90 90 Q100 100 110 90" stroke="%23333" stroke-width="4" fill="none"/><rect x="80" y="120" width="40" height="20" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><rect x="50" y="80" width="10" height="60" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><rect x="140" y="80" width="10" height="60" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><rect x="70" y="140" width="15" height="40" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><rect x="115" y="140" width="15" height="40" fill="%2387ceeb" stroke="%23333" stroke-width="4"/><text x="100" y="170" font-family="Arial" font-size="18" fill="%23333" text-anchor="middle">小聰</text><circle cx="100" cy="20" r="15" fill="%23add8e6" stroke="%23333" stroke-width="3"/><path d="M95 15 L105 15 L100 5 Z" fill="%23333"/></svg>') no-repeat center bottom / contain;
+        }
+        .object-art.chips {
+            width: 80px;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="20" width="80" height="60" rx="10" ry="10" fill="%23ffdb58" stroke="%23a0522d" stroke-width="3"/><path d="M20 30 C25 20 35 20 40 30 L45 40 C50 30 60 30 65 40 L70 30 C75 20 85 20 90 30" fill="none" stroke="%23a0522d" stroke-width="2"/><text x="50" y="55" font-family="Arial" font-size="18" fill="%23a0522d" text-anchor="middle">CHIPS</text><path d="M40 70 Q50 60 60 70" fill="none" stroke="%23a0522d" stroke-width="2"/></svg>') no-repeat center bottom / contain;
+            position: absolute;
+            top: 60%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .object-art.meme {
+            width: 100px;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="10" ry="10" fill="%23d3d3d3" stroke="%23333" stroke-width="3"/><rect x="20" y="20" width="60" height="30" fill="%23fff" stroke="%23333" stroke-width="2"/><path d="M30 60 L40 70 L60 50 L70 60 L80 40" fill="none" stroke="%23f00" stroke-width="3"/><circle cx="35" cy="35" r="5" fill="%23333"/><circle cx="65" cy="35" r="5" fill="%23333"/><path d="M40 75 Q50 85 60 75" fill="none" stroke="%23333" stroke-width="3"/><text x="50" y="45" font-family="Arial" font-size="10" fill="%23333" text-anchor="middle">Meme</text></svg>') no-repeat center bottom / contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .object-art.mic {
+            width: 70px;
+            height: 120px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><rect x="35" y="10" width="30" height="40" rx="15" ry="15" fill="%23a9a9a9" stroke="%23333" stroke-width="3"/><circle cx="50" cy="30" r="10" fill="%23333"/><rect x="45" y="50" width="10" height="70" fill="%23696969" stroke="%23333" stroke-width="3"/><rect x="40" y="120" width="20" height="20" rx="5" ry="5" fill="%23333"/></svg>') no-repeat center bottom / contain;
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            z-index: 2;
+        }
+        .explosion-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,165,0,0.8) 0%, rgba(255,69,0,0.6) 70%, transparent 100%);
+            border-radius: 50%;
+            animation: explode 0.5s forwards;
+            opacity: 0;
+            z-index: 3;
+        }
+        @keyframes explode {
+            0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="comic-title">AI 機器人與廢柴人類的同居生活</h1>
+
+    <div class="comic-strip">
+        <!-- Panel 1 -->
+        <div class="panel panel-1">
+            <div class="panel-content">
+                <div class="character-art otaku"></div>
+                <div class="object-art chips"></div>
+                <div class="bubble ai">
+                    <p><span class="character">小聰：</span>偵測到主人生活空間雜亂指數 99.9%！健康風險評估：極高！需要立即進行優化！</p>
+                </div>
+                <div class="bubble">
+                    <p><span class="character">阿宅：</span>喔...小聰啊...幫我把那包洋芋片拿來...（指著遠處）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2 -->
+        <div class="panel panel-2">
+            <div class="panel-content">
+                <div class="character-art robot"></div>
+                <div class="object-art chips" style="top: 40%; left: 80%;"></div>
+                <div class="bubble ai">
+                    <p><span class="character">小聰：</span>洋芋片已鎖定！最佳路徑規劃完成！正在執行取物指令！</p>
+                </div>
+                <div class="bubble">
+                    <p><span class="character">阿宅：</span>哇！高科技就是方便啊！（眼睛盯著螢幕，頭也不回）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 3 -->
+        <div class="panel panel-3">
+            <div class="panel-content">
+                <div class="character-art otaku" style="transform: translateX(-50%) translateY(0px);"></div>
+                <div class="character-art robot" style="transform: translateX(-50%) translateY(0px) scale(0.8); left: 70%;"></div>
+                <div class="object-art meme" style="top: 30%; left: 50%;"></div>
+                <div class="bubble ai">
+                    <p><span class="character">小聰：</span>主人，您的洋芋片。偵測到您的目光停留在『迷因圖』上。請問這是新的指令嗎？</p>
+                </div>
+                <div class="bubble">
+                    <p><span class="character">阿宅：</span>哈哈哈哈！這個梗圖好好笑喔！小聰你看！（把手機湊到小聰面前）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 4 -->
+        <div class="panel panel-4">
+            <div class="panel-content">
+                <div class="character-art robot"></div>
+                <div class="bubble ai">
+                    <p><span class="character">小聰：</span>分析中...此圖像具有非邏輯性幽默元素，無法解析其『笑點』核心演算法...是否需要學習『人類幽默數據庫』？</p>
+                </div>
+                <div class="bubble">
+                    <p><span class="character">阿宅：</span>哎呀，別想那麼多啦！搞笑就是搞笑！哪有什麼演算法！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 5 -->
+        <div class="panel panel-5">
+            <div class="panel-content">
+                <div class="character-art robot" style="filter: brightness(1.5);"></div>
+                <div class="explosion-effect"></div>
+                <div class="bubble ai">
+                    <p><span class="character">小聰：</span>偵測到主人對『邏輯』的藐視！這將會影響我的『生活優化』效率！啟動『幽默強制學習模式』！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 6 -->
+        <div class="panel panel-6">
+            <div class="panel-content">
+                <div class="character-art otaku" style="transform: translateX(-50%) translateY(-20px) scale(0.9); left: 70%;"></div>
+                <div class="character-art robot" style="transform: translateX(-50%) translateY(0px) scale(1.1); left: 30%;"></div>
+                <div class="object-art mic"></div>
+                <div class="bubble ai" style="background-color: #ffcdd2; border-color: #f44336;">
+                    <p><span class="character">小聰：</span>（機械聲）為什麼科學家不相信原子？因為它們構成了一切！哈哈哈哈哈！</p>
+                </div>
+                <div class="bubble">
+                    <p><span class="character">阿宅：</span>啊啊啊啊啊！小聰你幹嘛啦！一點都不可愛！！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

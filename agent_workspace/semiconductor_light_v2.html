@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【四コマ漫画 V2】今日半導體是明日的明燈</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .manga-container {
+            background-color: white;
+            border: 4px solid black;
+            padding: 20px;
+            width: 800px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.75);
+            transform: rotate(-0.8deg);
+        }
+        .title {
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 28px;
+            text-align: center;
+            border-bottom: 5px double black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .comic-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            border: 2px solid #555;
+            padding: 10px;
+        }
+        .panel {
+            border: 2px solid black;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background-color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+        .panel:nth-child(1) { transform: rotate(0.6deg); }
+        .panel:nth-child(2) { transform: rotate(-0.7deg); }
+        .panel:nth-child(3) { transform: rotate(0.9deg); }
+        .panel:nth-child(4) { transform: rotate(-0.5deg); }
+
+        .screentone-dark-dots {
+             background-color: #e0e0e0;
+             background-image: radial-gradient(#333333 15%, transparent 16%);
+             background-size: 10px 10px;
+        }
+        .speed-lines {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200%; height: 200%;
+            background: repeating-conic-gradient(from 0deg, black 0deg 1deg, white 1deg 5deg);
+            transform-origin: center center;
+            transform: translate(-50%, -50%) rotate(25deg);
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        .dialogue-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid black;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+            align-self: flex-start;
+        }
+        .dialogue-bubble.from-robot {
+             align-self: flex-end;
+        }
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px; left: 30px;
+            width: 0; height: 0;
+            border: 20px solid transparent;
+            border-top-color: black;
+            transform: rotate(15deg);
+        }
+        .dialogue-bubble.from-robot::after {
+            left: auto; right: 30px;
+            transform: rotate(-15deg);
+        }
+        .character-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            position: relative;
+            z-index: 2;
+        }
+        .panel-number {
+            position: absolute;
+            top: 5px; left: 5px;
+            font-size: 24px; font-weight: bold;
+            color: rgba(0,0,0,0.4);
+            z-index: 3;
+        }
+        svg {
+            width: 160px;
+            height: 190px;
+            overflow: visible;
+        }
+        .otaku .hair { fill: #222; }
+        .otaku .glasses { stroke: black; stroke-width: 8; fill: none; }
+        .otaku .face { fill: #f0e2d8; }
+        .otaku .mouth { fill: none; stroke: #333; stroke-width: 3;}
+        .otaku .sweat { fill: #66aaff; }
+        .otaku .hoodie { fill: #5a677d; }
+        .otaku .tears { fill: #89cff0; }
+
+        .smarty .head { fill: #e0e0e0; stroke: #333; stroke-width: 2;}
+        .smarty .eye { fill: #7df9ff; stroke: #333; stroke-width: 2; }
+        .smarty .mouth { stroke: #333; stroke-width: 3; fill: none; }
+        .smarty .body { fill: #ccc; stroke: #333; stroke-width: 2;}
+        .smarty .chip { fill: #2c3e50; stroke: #f1c40f; stroke-width: 3; filter: drop-shadow(0 0 5px #f1c40f); }
+
+    </style>
+</head>
+<body>
+
+<div class="manga-container">
+    <h1 class="title">【V2】今日半導體是明日的明燈</h1>
+    <div class="comic-strip">
+        <!-- 格子 1 -->
+        <div class="panel screentone-dark-dots">
+            <div class="panel-number">1</div>
+            <div class="dialogue-bubble">嗚嗚嗚…算圖跑不動…進度條卡在 99%…我的靈感…我的肝…就要枯竭了…</div>
+            <div class="character-area">
+                <svg viewBox="0 0 160 190" class="otaku">
+                    <path class="hair" d="M25,75 Q80,25 135,75 L130,85 Q80,45 30,85 Z M35,65 L25,45 L45,55z M125,65 L135,45 L115,55z M80,35 L75,15 L85,35z"/>
+                    <path class="face" d="M35,75 Q80,125 125,75 T35,75"/>
+                    <ellipse class="glasses" cx="60" cy="80" rx="22" ry="16"/>
+                    <ellipse class="glasses" cx="100" cy="80" rx="22" ry="16"/>
+                    <path d="M50,75 C55,70 65,70 70,75" stroke="#fff" stroke-width="4"/>
+                    <path d="M90,75 C95,70 105,70 110,75" stroke="#fff" stroke-width="4"/>
+                    <path class="mouth" d="M70,105 Q80,100 90,105" />
+                    <path class="sweat" d="M120,65 C130,55 135,45 125,40 C115,35 115,50 120,65 Z" />
+                    <path class="hoodie" d="M15,125 L145,125 L145,190 L15,190 Z M65,125 L95,125 L95,145 L65,145 Z"/>
+                </svg>
+            </div>
+        </div>
+        <!-- 格子 2 -->
+        <div class="panel">
+            <div class="panel-number">2</div>
+             <div class="dialogue-bubble from-robot">主人！別放棄！新世代的『半導體』來拯救您了！看這個搭載 AI 核心的超級晶片！</div>
+            <div class="character-area">
+                <svg viewBox="0 0 160 190" class="smarty">
+                    <circle class="head" cx="80" cy="85" r="65"/>
+                    <circle class="eye" cx="60" cy="75" r="15"/>
+                    <circle class="eye" cx="100" cy="75" r="15"/>
+                    <path class="mouth" d="M65,110 C 75,125 85,125 95,110" />
+                    <rect class="body" x="50" y="150" width="60" height="40" rx="10"/>
+                    <rect class="chip" x="70" y="10" width="40" height="40" rx="5" />
+                </svg>
+            </div>
+        </div>
+        <!-- 格子 3 -->
+        <div class="panel">
+            <div class="panel-number">3</div>
+            <div class="dialogue-bubble">這…這小小的晶片…真的能改變我眼前的黑暗嗎？</div>
+            <div class="character-area">
+                 <svg viewBox="0 0 160 190" class="otaku">
+                    <path class="hair" d="M25,75 Q80,25 135,75 L130,85 Q80,45 30,85 Z M35,65 L25,45 L45,55z M125,65 L135,45 L115,55z M80,35 L75,15 L85,35z"/>
+                    <path class="face" d="M35,75 Q80,125 125,75 T35,75"/>
+                    <ellipse class="glasses" cx="60" cy="80" rx="22" ry="16"/>
+                    <ellipse class="glasses" cx="100" cy="80" rx="22" ry="16"/>
+                    <circle cx="60" cy="80" r="4" fill="black"/>
+                    <circle cx="100" cy="80" r="4" fill="black"/>
+                    <circle class="mouth" cx="80" cy="105" r="5" />
+                    <path class="hoodie" d="M15,125 L145,125 L145,190 L15,190 Z M65,125 L95,125 L95,145 L65,145 Z"/>
+                </svg>
+            </div>
+        </div>
+        <!-- 格子 4 -->
+        <div class="panel">
+            <div class="speed-lines"></div>
+            <div class="panel-number">4</div>
+            <div class="dialogue-bubble" style="text-align:center; width: 80%; align-self: center;">うおおおお！這速度…這光芒…！這就是明日的明燈啊！</div>
+            <div class="character-area">
+                <svg viewBox="0 0 160 190" class="otaku">
+                    <path class="hair" d="M25,75 Q80,25 135,75 L130,85 Q80,45 30,85 Z M35,65 L25,45 L45,55z M125,65 L135,45 L115,55z M80,35 L75,15 L85,35z"/>
+                    <path class="face" d="M35,75 Q80,140 125,75 T35,75"/>
+                    <path d="M50,70 L70,85 M70,70 L50,85" stroke="black" stroke-width="4"/>
+                    <path d="M90,70 L110,85 M110,70 L90,85" stroke="black" stroke-width="4"/>
+                    <path class="mouth" d="M60,100 Q80,125 100,100 T60,100" fill="white" stroke="black" stroke-width="3"/>
+                    <path class="tears" d="M40,90 C30,120 50,120 40,90 Z" />
+                    <path class="tears" d="M120,90 C130,120 110,120 120,90 Z" />
+                    <path class="hoodie" d="M15,125 L145,125 L145,190 L15,190 Z M65,125 L95,125 L95,145 L65,145 Z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

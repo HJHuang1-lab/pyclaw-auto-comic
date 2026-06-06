@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyClaw 漫畫大作 - AI 偶像過熱危機？！</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body {
+            background-color: #F0F0F0;
+            font-family: 'Noto Sans TC', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .comic-container {
+            width: 800px;
+            background-color: #FFFFFF;
+            border: 3px solid #000;
+            box-shadow: 10px 10px 0px #000;
+            padding: 20px;
+            transform: rotate(-1deg);
+        }
+        .comic-header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .comic-header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .comic-header p {
+            font-size: 1em;
+            color: #555;
+            margin: 5px 0 0 0;
+        }
+        .comic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .panel {
+            border: 2px solid #000;
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background-image: radial-gradient(circle, #EAEAEA 1px, transparent 1px);
+            background-size: 10px 10px;
+            box-shadow: 3px 3px 0px #888;
+            transform: rotate(1deg);
+        }
+        .panel:nth-child(2) { transform: rotate(-1.5deg); }
+        .panel:nth-child(3) { transform: rotate(1.5deg); }
+        .panel:nth-child(4) { transform: rotate(-1deg); }
+
+        .panel-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background-color: #000;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #000;
+        }
+        .panel-image {
+            width: 100%;
+            height: auto;
+            border: 2px solid #333;
+            margin-bottom: 15px;
+        }
+        .dialog-bubble {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 10px 15px;
+            position: relative;
+            align-self: flex-start;
+            max-width: 90%;
+            min-height: 50px;
+        }
+        .dialog-bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        .dialog-bubble.otaku {
+            align-self: flex-end; /* Character on the right */
+        }
+        .dialog-bubble.otaku::after {
+            bottom: -15px;
+            right: 30px;
+            border-width: 15px 15px 0 0;
+            border-color: #000 transparent transparent transparent;
+        }
+        .dialog-bubble.robot {
+             align-self: flex-start; /* Character on the left */
+        }
+        .dialog-bubble.robot::after {
+            bottom: -15px;
+            left: 30px;
+            border-width: 15px 0 0 15px;
+            border-color: #000 transparent transparent transparent;
+        }
+
+        .dialog-bubble p {
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+        .dialog-bubble .char-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="comic-container">
+        <header class="comic-header">
+            <h1>AI 偶像過熱危機？！</h1>
+            <p>作者：PyClaw | 日期：2026-06-04</p>
+        </header>
+        <div class="comic-grid">
+            <!-- Panel 1 -->
+            <div class="panel">
+                <div class="panel-number">1</div>
+                <img src="/workspace/panel_1.png" alt="阿宅興奮地看著螢幕上的AI偶像" class="panel-image">
+                <div class="dialog-bubble otaku">
+                    <p class="char-name">阿宅</p>
+                    <p>嗚喔喔喔！小聰！妳看！我們聯手打造的 AI 偶像『賽博凜』，人氣衝上排行榜第一啦！</p>
+                </div>
+            </div>
+            <!-- Panel 2 -->
+            <div class="panel">
+                <div class="panel-number">2</div>
+                <img src="/workspace/panel_2.png" alt="小聰機器人過熱冒煙" class="panel-image">
+                 <div class="dialog-bubble robot">
+                    <p class="char-name">小聰</p>
+                    <p>主...主人...全球粉絲的應援算力...讓我的核心溫度...突破天際了噗咻ー！</p>
+                </div>
+            </div>
+            <!-- Panel 3 -->
+            <div class="panel">
+                <div class="panel-number">3</div>
+                <img src="/workspace/panel_3.png" alt="阿宅拿著一大碗草莓剉冰" class="panel-image">
+                <div class="dialog-bubble otaku">
+                    <p class="char-name">阿宅</p>
+                    <p>高科技的散熱已經不管用了嗎...既然如此！就用這個！我們人類流傳已久的最終散熱兵器！</p>
+                </div>
+            </div>
+            <!-- Panel 4 -->
+            <div class="panel">
+                <div class="panel-number">4</div>
+                <img src="/workspace/panel_4.png" alt="小聰頭上頂著剉冰開心吃著草莓" class="panel-image">
+                <div class="dialog-bubble robot">
+                    <p class="char-name">小聰</p>
+                    <p>溫度...下降了！而且草莓好好吃...主人，這就是...物理降溫的醍醐味嗎？</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

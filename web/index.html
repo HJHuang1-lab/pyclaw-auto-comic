@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyClaw - 智能體自動化儀表板</title>
+    <!-- 載入 Google Fonts & FontAwesome 圖示 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="aurora-bg"></div>
+    <div class="aurora-glow-1"></div>
+    <div class="aurora-glow-2"></div>
+
+    <div class="app-container">
+        <!-- 1. 左側邊欄：控制中心與技能庫 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-microchip logo-icon"></i>
+                    <span>PyClaw <span class="logo-badge">v1.0</span></span>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot disconnected" id="connection-dot"></span>
+                    <span class="status-text" id="connection-text">未連線</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3><i class="fa-solid fa-circle-info"></i> 會話設定</h3>
+                <div class="session-card">
+                    <div class="form-group">
+                        <label for="session-id-input">Session ID</label>
+                        <div class="session-input-wrapper">
+                            <input type="text" id="session-id-input" value="default-session">
+                            <button id="reconnect-btn" title="重新載入/連線"><i class="fa-solid fa-rotate"></i></button>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger" id="clear-btn"><i class="fa-solid fa-trash-can"></i> 清除對話與日誌</button>
+                </div>
+            </div>
+
+            <div class="sidebar-section flex-grow">
+                <h3><i class="fa-solid fa-sliders"></i> 技能清單 (Skills)</h3>
+                <div class="skills-list" id="skills-list">
+                    <!-- 技能卡片會動態加載於此 -->
+                    <div class="loading-placeholder">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> 載入技能中...
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>自託管 AI 智能體網關系統</p>
+                <a href="https://aistudio.google.com/" target="_blank"><i class="fa-solid fa-bolt"></i> Google Gemini API</a>
+            </div>
+        </aside>
+
+        <!-- 2. 中間：主對話視窗 -->
+        <main class="chat-container">
+            <header class="chat-header">
+                <div class="header-info">
+                    <h2><i class="fa-regular fa-comment-dots"></i> 對話視窗</h2>
+                    <p>與 AI 助理進行交談，他將依據指令自動呼叫技能</p>
+                </div>
+            </header>
+
+            <div class="messages-area" id="messages-area">
+                <!-- 對話紀錄會加載於此 -->
+                <div class="system-welcome">
+                    <div class="welcome-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h2>歡迎使用 PyClaw 自動化系統</h2>
+                    <p>這是一個基於 ReAct (Reasoning + Action) 決策循環的 AI 智能體。你可以直接輸入指令要求他幫你處理任務，例如：</p>
+                    <div class="example-grid">
+                        <button class="example-btn">建立一個 todo.txt 並寫入今日任務</button>
+                        <button class="example-btn">搜尋 2026 年最新的 AI 科技新聞並整理</button>
+                        <button class="example-btn">列出當前工作區的所有檔案</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-bar">
+                <form id="chat-form">
+                    <input type="text" id="chat-input" placeholder="輸入指令要求 PyClaw 執行自動化任務..." autocomplete="off">
+                    <button type="submit" id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </main>
+
+        <!-- 3. 右側：即時思考與執行畫布 (Live Canvas) -->
+        <section class="canvas-container">
+            <header class="canvas-header">
+                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> 即時執行畫布 (Live Canvas)</h2>
+                <div class="canvas-actions">
+                    <span class="badge" id="step-count">0 步驟</span>
+                    <span class="badge" id="execution-timer" style="display: none; margin-left: 8px;"></span>
+                </div>
+            </header>
+
+            <!-- 新增分頁切換按鈕 -->
+            <div class="canvas-tabs">
+                <button class="tab-btn active" id="tab-logs-btn">
+                    <i class="fa-solid fa-list-ul"></i> 執行日誌
+                </button>
+                <button class="tab-btn" id="tab-preview-btn">
+                    <i class="fa-solid fa-eye"></i> 網頁預覽
+                </button>
+            </div>
+
+            <div class="canvas-logs" id="canvas-logs">
+                <!-- AI 內部的思考與工具執行步驟會動態渲染於此 -->
+                <div class="canvas-empty">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <p>尚無執行日誌</p>
+                    <span>當您送出指令時，這裡會以毫秒級的延遲即時呈現 AI 大腦的思考軌跡與工具呼叫過程。</span>
+                </div>
+            </div>
+
+            <!-- 新增網頁預覽區域 -->
+            <div class="canvas-preview" id="canvas-preview">
+                <div class="preview-placeholder" id="preview-placeholder">
+                    <i class="fa-solid fa-file-code"></i>
+                    <p>尚無可預覽的網頁</p>
+                    <span>當 AI 生成或更新 HTML 網頁（例如漫畫檔）時，此處將自動呈現即時畫面。</span>
+                </div>
+                <iframe id="preview-iframe" src="" frameborder="0" style="width: 100%; height: 100%; display: none; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"></iframe>
+            </div>
+        </section>
+    </div>
+</body>
+<script src="app.js"></script>
+</html>
