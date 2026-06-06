@@ -3,8 +3,8 @@ import json
 import logging
 import datetime
 from typing import Callable, List, Dict, Any
-import google.generativeai as genai
-import google.generativeai.protos as protos
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 from agent.memory import AgentMemory
@@ -19,17 +19,18 @@ class AgentRuntime:
         self._configure_gemini()
 
     def _configure_gemini(self):
-        """配置 Gemini API"""
+        """配置 Gemini API（使用新版 google.genai SDK）"""
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key or api_key == "your_gemini_api_key_here":
             logging.warning("警告：GEMINI_API_KEY 未設定，請在工作區的 .env 檔案中填入金鑰！")
             self.api_key_set = False
+            self.client = None
         else:
-            genai.configure(api_key=api_key)
+            self.client = genai.Client(api_key=api_key)
             self.api_key_set = True
             
-        # 獲取模型名稱，預設為 gemini-1.5-flash
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+        # 獲取模型名稱，預設為 gemini-2.0-flash
+        self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
     async def run(self, session_id: str, user_message: str, callback: Callable[[Dict[str, Any]], Any] = None):
         """
@@ -58,8 +59,7 @@ class AgentRuntime:
         active_skills = registry.get_enabled_skills()
         tools = [s["func"] for s in active_skills] if active_skills else []
         
-        # 4. 載入歷史紀錄並建立 Gemini 對話結構
-        # 系統提示詞 (System Instruction)，賦予智能體角色與行為準則
+        # 4. 系統提示詞 (System Instruction)，賦予智能體角色與行為準則
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         receiver = os.getenv("NOTIFICATION_RECEIVER", "a5170171@gmail.com")
         base_url = os.getenv("BASE_URL", "http://127.0.0.1:8000")
@@ -92,27 +92,24 @@ class AgentRuntime:
             f"5. 你的回答必須極具日系動漫風格與創作激情，使用溫慢熱血的繁體中文 (zh-TW) 與使用者交談。"
         )
 
-        # 組合歷史對話做為 Gemini 的 contents
+        # 5. 組合歷史對話
         history_messages = self.memory.get_messages(session_id, limit=20)
-        
-        # 將歷史轉換成 Gemini API 接受的格式 (統一使用 protos.Content 物件，避免與後續 Tool 呼叫物件混用造成序列化錯誤)
         contents = []
         for msg in history_messages:
             role = "user" if msg["role"] == "user" else "model"
-            contents.append(protos.Content(
+            contents.append(types.Content(
                 role=role,
-                parts=[protos.Part(text=msg["content"])]
+                parts=[types.Part.from_text(text=msg["content"])]
             ))
             
-        # 5. 啟動 Gemini 模型
-        # 我們使用 GenerativeModel，並啟用 manual tools
-        model = genai.GenerativeModel(
-            model_name=self.model_name,
-            system_instruction=system_instruction
+        # 6. 設定 GenerateContentConfig（系統提示詞 + 工具）
+        config = types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            tools=tools if tools else None,
         )
-        
+            
         # 初始化循環變數
-        max_turns = 10 # 限制單次任務工具呼叫次數防範無限死循環
+        max_turns = 10  # 限制單次任務工具呼叫次數防範無限死循環
         current_turn = 0
         final_answer = ""
         
@@ -129,12 +126,12 @@ class AgentRuntime:
             current_turn += 1
             
             try:
-                # 呼叫 Gemini 產生內容
-                # 如果沒有可用 tools，我們就不傳入 tools 參數以防出錯
-                if tools:
-                    response = model.generate_content(contents, tools=tools)
-                else:
-                    response = model.generate_content(contents)
+                # 呼叫 Gemini 產生內容（新版 google.genai SDK）
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=contents,
+                    config=config,
+                )
                 
                 # 安全解析候選內容
                 if not response.candidates:
@@ -146,52 +143,45 @@ class AgentRuntime:
                     safety_ratings = getattr(candidate, "safety_ratings", [])
                     raise ValueError(
                         f"Gemini 回應內容為空。Finish reason: {finish_reason}. "
-                        f"Safety ratings: {safety_ratings}. Prompt feedback: {getattr(response, 'prompt_feedback', 'None')}"
+                        f"Safety ratings: {safety_ratings}."
                     )
                     
                 model_content = candidate.content
                 parts = model_content.parts
 
                 # 檢查是否有 function call (工具調用)
-                function_calls = [p.function_call for p in parts if p.function_call]
+                function_calls = [
+                    p.function_call for p in parts
+                    if hasattr(p, "function_call") and p.function_call and p.function_call.name
+                ]
                 
                 # 如果有文字內容，視為 AI 的思考過程 (Thought)
-                text_parts = [p.text for p in parts if p.text]
+                text_parts = [p.text for p in parts if hasattr(p, "text") and p.text]
                 if text_parts:
                     thought_text = "\n".join(text_parts).strip()
                     if thought_text:
-                        # 儲存到 SQLite
                         log_data = self.memory.add_execution_log(
                             session_id, "thought", f"思考軌跡 (步驟 {current_turn})", thought_text
                         )
-                        # 即時廣播
                         if callback:
                             await callback(log_data)
                             
-                # 將 Model 的回應重新包裝為乾淨的 protos.Content 物件，避免與後續的 protos.Content 混用產生序列化錯誤
-                clean_parts = []
-                for part in model_content.parts:
-                    if part.text:
-                        clean_parts.append(protos.Part(text=part.text))
-                    elif part.function_call:
-                        clean_parts.append(protos.Part(
-                            function_call=protos.FunctionCall(
-                                name=part.function_call.name,
-                                args=dict(part.function_call.args)
-                            )
-                        ))
-                contents.append(protos.Content(role=model_content.role, parts=clean_parts))
+                # 將 Model 的回應加入 contents
+                contents.append(types.Content(role="model", parts=list(parts)))
                 
                 # 如果沒有 function call，代表推理結束，這就是最終回答
                 if not function_calls:
-                    final_answer = response.text
+                    try:
+                        final_answer = response.text
+                    except Exception:
+                        final_answer = "\n".join(text_parts) if text_parts else "任務已完成。"
                     break
                     
-                # 處理第一個 function call (一般來說一次處理一個，Gemini 也支援平行調用，這裡處理主調用)
+                # 處理 function call
                 fn_call = function_calls[0]
                 tool_name = fn_call.name
                 
-                # 遞迴將 Protobuf 物件轉為原生 Python 型態，避免 json.dumps 序列化失敗 (例如 RepeatedComposite)
+                # 將 args 轉為原生 Python 型態
                 def to_native_type(obj):
                     if hasattr(obj, "items"):
                         return {k: to_native_type(v) for k, v in obj.items()}
@@ -205,14 +195,11 @@ class AgentRuntime:
                 tool_args = to_native_type(fn_call.args)
                 
                 # 1. 紀錄工具調用日誌
-                tool_call_info = {
-                    "tool": tool_name,
-                    "arguments": tool_args
-                }
+                tool_call_info = {"tool": tool_name, "arguments": tool_args}
                 log_data = self.memory.add_execution_log(
-                    session_id, 
-                    "tool_call", 
-                    f"呼叫技能：{tool_name}", 
+                    session_id,
+                    "tool_call",
+                    f"呼叫技能：{tool_name}",
                     tool_call_info
                 )
                 if callback:
@@ -223,27 +210,21 @@ class AgentRuntime:
                 
                 # 3. 紀錄執行結果 (Observation)
                 log_data = self.memory.add_execution_log(
-                    session_id, 
-                    "observation", 
-                    f"執行結果：{tool_name}", 
+                    session_id,
+                    "observation",
+                    f"執行結果：{tool_name}",
                     str(observation)
                 )
                 if callback:
                     await callback(log_data)
                     
-                # 4. 將執行結果以 "function" 角色回傳給 Gemini
-                # 我們需要建立一個 protos.Part 包含 function_response 結構
-                response_part = protos.Part(
-                    function_response=protos.FunctionResponse(
+                # 4. 將執行結果回傳給 Gemini（新版 SDK：role="user" + from_function_response）
+                contents.append(types.Content(
+                    role="user",
+                    parts=[types.Part.from_function_response(
                         name=tool_name,
                         response={"result": str(observation)}
-                    )
-                )
-                
-                # 加入到對話 contents 中
-                contents.append(protos.Content(
-                    role="function",
-                    parts=[response_part]
+                    )]
                 ))
                 
             except Exception as e:
@@ -258,10 +239,10 @@ class AgentRuntime:
         if current_turn >= max_turns and not final_answer:
             final_answer = "抱歉，我的推理步驟已達上限，為防範無限循環，我必須先暫停。請嘗試簡化您的指令。"
             
-        # 6. 保存最終回答到 SQLite 聊天歷史
+        # 7. 保存最終回答到 SQLite 聊天歷史
         self.memory.add_message(session_id, "assistant", final_answer)
         
-        # 7. 通知前端完成
+        # 8. 通知前端完成
         if callback:
             await callback({
                 "session_id": session_id,
